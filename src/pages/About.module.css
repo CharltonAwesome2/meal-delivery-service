@@ -1,0 +1,39 @@
+/* About.module.css */
+
+.aboutContainer {
+  padding: var(--spacing-xl) var(--spacing-lg);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.aboutContainer h2 {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.aboutContainer h3 {
+  font-size: var(--font-size-xl);
+  margin-top: var(--spacing-2xl);
+  margin-bottom: var(--spacing-md);
+  color: var(--primary-color);
+}
+
+.aboutContainer p {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-lg);
+}
+
+.aboutContainer ul {
+  list-style-position: inside;
+  margin-bottom: var(--spacing-xl);
+  padding-left: var(--spacing-md);
+}
+
+.aboutContainer ul li {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+}
