@@ -236,6 +236,7 @@
 .inputError {
   border-color: #dc3545 !important;
   background-color: #fff8f8 !important;
+  scroll-margin-top: 7.5rem;
 }
 
 .errorText {
@@ -360,4 +361,11 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+.formGroup input:disabled,
+.formGroup textarea:disabled {
+  background-color: var(--text-light);
+  color: var(--text-secondary);
+  cursor: not-allowed;
 }

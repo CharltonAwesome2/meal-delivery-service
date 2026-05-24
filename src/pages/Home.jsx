@@ -13,6 +13,7 @@ function Home() {
             Delivered to Your Res
           </h1>
           <p className={styles.tagline}>Fresh, student-friendly meals under R60. Perfect for busy days at CPUT.</p>
+          <p className={styles.tagline}>To fill in the questionnaire, add at least one meal to your cart and checkout.</p>
 
           <div className={styles.actions}>
             <Link to="/menu" className="btn btn-primary">

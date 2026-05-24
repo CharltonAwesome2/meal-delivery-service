@@ -1,10 +1,14 @@
 // src/pages/Order.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { DELIVERY_METHODS, DELIVERY_COST } from "@constants";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
 import styles from "./Order.module.css";
-import ResearchQuestions from "@components/ResearchQuestions";
+import ResearchQuestions, {
+  areRequiredResearchQuestionsComplete,
+  getFirstIncompleteRequiredResearchQuestionId,
+} from "@components/ResearchQuestions";
 
 function Order() {
   const [cart, setCart] = useState([]);
@@ -15,9 +19,12 @@ function Order() {
   const [orderId, setOrderId] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [errors, setErrors] = useState({});
+  const [validationAttempted, setValidationAttempted] = useState(false);
+  const [focusResearchQuestionId, setFocusResearchQuestionId] = useState("");
+  const nameFieldRef = useRef(null);
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
+    phone: "0000000000",
     address: "",
     notes: "",
   });
@@ -83,6 +90,23 @@ function Order() {
     setResearchAnswers(data);
   };
 
+  const canSubmit = Boolean(formData.name.trim()) && cart.length > 0 && areRequiredResearchQuestionsComplete(researchAnswers);
+
+  const scrollToFirstError = (errorMap) => {
+    const fieldOrder = ["name"];
+    const firstInvalidField = fieldOrder.find((field) => errorMap[field]);
+
+    if (!firstInvalidField) {
+      return;
+    }
+
+    const element = firstInvalidField === "name" ? nameFieldRef.current : null;
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      element.focus({ preventScroll: true });
+    }
+  };
+
   // Validation function
   const validateForm = () => {
     const newErrors = {};
@@ -91,18 +115,8 @@ function Order() {
       newErrors.name = "Please enter your name";
     }
     
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Please enter your phone number";
-    } else if (!/^[\d\s\+\-\(\)]{10,}$/.test(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number (at least 10 digits)";
-    }
-    
-    if (deliveryMethod === DELIVERY_METHODS.DELIVERY && !formData.address.trim()) {
-      newErrors.address = "Please enter your delivery address";
-    }
-    
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
   const handleOpenModal = (e) => {
@@ -111,8 +125,20 @@ function Order() {
       toast.error("Please add some meals to your cart first!");
       return;
     }
-    if (validateForm()) {
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length === 0) {
+      if (!areRequiredResearchQuestionsComplete(researchAnswers)) {
+        setValidationAttempted(true);
+        setFocusResearchQuestionId(getFirstIncompleteRequiredResearchQuestionId(researchAnswers));
+        return;
+      }
+
       setShowConfirmModal(true);
+      setValidationAttempted(false);
+      setFocusResearchQuestionId("");
+    } else {
+      setValidationAttempted(true);
+      scrollToFirstError(newErrors);
     }
   };
 
@@ -198,6 +224,8 @@ function Order() {
       });
       setResearchAnswers({});
       setErrors({});
+      setValidationAttempted(false);
+      setFocusResearchQuestionId("");
       setStatus("success");
       generateOrderId();
     } catch (error) {
@@ -271,7 +299,7 @@ function Order() {
                 </div>
               </>
             ) : (
-              <p>Your cart is empty. <a href="/menu">Browse Menu</a></p>
+              <p>Your cart is empty. <Link to="/menu">Browse Menu</Link></p>
             )}
           </div>
 
@@ -284,12 +312,15 @@ function Order() {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 onFocus={() => setErrors({ ...errors, name: "" })}
                 placeholder="Enter your name"
+                ref={nameFieldRef}
                 className={errors.name ? styles.inputError : ""}
+                aria-invalid={Boolean(errors.name)}
+                style={{ scrollMarginTop: "7.5rem" }}
               />
               {errors.name && <span className={styles.errorText}>{errors.name}</span>}
             </div>
 
-            <div className={styles.formGroup}>
+            {/* <div className={styles.formGroup}>
               <label>Phone Number *</label>
               <input
                 type="tel"
@@ -297,10 +328,15 @@ function Order() {
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 onFocus={() => setErrors({ ...errors, phone: "" })}
                 placeholder="Your contact number"
+                ref={(element) => {
+                  fieldRefs.current.phone = element;
+                }}
                 className={errors.phone ? styles.inputError : ""}
+                defaultValue="0000000000" 
+                disabled
               />
               {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
-            </div>
+            </div> */}
 
             <div className={styles.formGroup}>
               <label>Meal Plan</label>
@@ -315,7 +351,7 @@ function Order() {
               <label>Delivery Method</label>
               <select value={deliveryMethod} onChange={(e) => setDeliveryMethod(e.target.value)}>
                 <option value={DELIVERY_METHODS.PICKUP}>Pickup (Free) - Campus Central</option>
-                <option value={DELIVERY_METHODS.DELIVERY}>Delivery to Residence (+R{DELIVERY_COST})</option>
+                <option value={DELIVERY_METHODS.DELIVERY}>Delivery to Residence - Rondebosch area (+R{DELIVERY_COST})</option>
               </select>
             </div>
 
@@ -328,6 +364,9 @@ function Order() {
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   onFocus={() => setErrors({ ...errors, address: "" })}
                   placeholder="e.g. Fuller Hall, Room 214, CPUT"
+                  ref={(element) => {
+                    fieldRefs.current.address = element;
+                  }}
                   className={errors.address ? styles.inputError : ""}
                 />
                 {errors.address && <span className={styles.errorText}>{errors.address}</span>}
@@ -344,15 +383,30 @@ function Order() {
               />
             </div>
 
-            <ResearchQuestions onDataChange={handleResearchData} />
+            <ResearchQuestions
+              onDataChange={handleResearchData}
+              validationAttempted={validationAttempted}
+              requestScrollToQuestionId={focusResearchQuestionId}
+            />
 
             <button
               type="submit"
               className="btn btn-primary"
-              style={{ width: "100%", padding: "1rem", fontSize: "1.2rem" }}
-              disabled={status === "sending" || cart.length === 0}
+              style={{
+                width: "100%",
+                padding: "1rem",
+                fontSize: "1.2rem",
+                backgroundColor: !canSubmit || status === "sending" ? "#cbd5e1" : undefined,
+                color: !canSubmit || status === "sending" ? "#64748b" : undefined,
+                cursor: status === "sending" ? "not-allowed" : "pointer",
+                boxShadow: !canSubmit || status === "sending" ? "none" : undefined,
+                transform: "none",
+                opacity: !canSubmit || status === "sending" ? 0.92 : 1,
+              }}
+              disabled={status === "sending"}
+              aria-disabled={!canSubmit || status === "sending"}
             >
-              {status === "sending" ? "Submitting Test Order..." : `Review Order - R${grandTotal.toFixed(2)}`}
+              {status === "sending" ? "Submitting Test Order..." : `Submit order and questionnaire - R${grandTotal.toFixed(2)}`}
             </button>
 
             <p style={{ fontSize: "12px", color: "#666", textAlign: "center", marginTop: "10px" }}>

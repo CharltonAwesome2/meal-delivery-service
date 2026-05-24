@@ -1,6 +1,6 @@
 // ToastProvider.jsx
 
-import { Toaster } from "react-hot-toast";
+import { Toaster, ToastBar, toast } from "react-hot-toast";
 
 function ToastProvider() {
   return (
@@ -39,7 +39,36 @@ function ToastProvider() {
           },
         },
       }}
-    />
+    >
+      {(t) => (
+        <ToastBar toast={t}>
+          {({ icon, message }) => (
+            <>
+              {icon}
+              {message}
+              <button
+                type="button"
+                aria-label="Dismiss notification"
+                onClick={() => toast.dismiss(t.id)}
+                style={{
+                  marginLeft: 10,
+                  border: "none",
+                  background: "transparent",
+                  color: "inherit",
+                  cursor: "pointer",
+                  fontSize: "1.1rem",
+                  lineHeight: 1,
+                  padding: 0,
+                  flex: "0 0 auto",
+                }}
+              >
+                ×
+              </button>
+            </>
+          )}
+        </ToastBar>
+      )}
+    </Toaster>
   );
 }
 
