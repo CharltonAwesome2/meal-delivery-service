@@ -1,20 +1,133 @@
 /* src/pages/Menu.module.css */
 .menuContainer {
-  padding: var(--spacing-xl) 0;
+  padding: var(--spacing-3xl) 0;
+  background: var(--background-color);
 }
 
 .header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: var(--spacing-2xl);
 }
 
 .header h2 {
-  color: var(--primary);
-  margin-bottom: 1rem;
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.header p {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
 }
 
 .menuGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-2xl);
+}
+
+/* Daily Special Banner */
+.specialBanner {
+  background: var(--gradient-primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  margin-bottom: var(--spacing-2xl);
+  color: white;
+  box-shadow: var(--shadow);
+  animation: slideIn 0.5s ease-out;
+}
+
+.specialContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+}
+
+.specialIcon {
+  font-size: 3rem;
+  animation: bounce 2s infinite;
+}
+
+.specialContent h3 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-xl);
+}
+
+.specialContent p {
+  margin: 0;
+  opacity: 0.95;
+  font-size: var(--font-size-base);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menuContainer {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .header h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .header p {
+    font-size: var(--font-size-base);
+  }
+
+  .menuGrid {
+    gap: var(--spacing-lg);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  .specialBanner {
+    padding: var(--spacing-lg) var(--spacing-xl);
+  }
+
+  .specialIcon {
+    font-size: 2rem;
+  }
+
+  .specialContent h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .specialContent p {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .menuGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .specialContent {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-md);
+  }
+
+  .specialIcon {
+    font-size: 2.5rem;
+  }
 }

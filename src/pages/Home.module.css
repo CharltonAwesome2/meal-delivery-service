@@ -43,3 +43,21 @@
     max-width: 300px;
   }
 }
+
+@media (max-width: 480px) {
+  .hero {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .hero h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .hero p {
+    font-size: var(--font-size-base);
+  }
+
+  .actions {
+    gap: var(--spacing-sm);
+  }
+}

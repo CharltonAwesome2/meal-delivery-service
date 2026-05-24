@@ -70,14 +70,30 @@
   justify-content: center;
 }
 
-.hero {
-  padding: 6rem 2rem 4rem; /* Reduced from previous */
-  text-align: center;
-  background:
-    linear-gradient(rgba(26, 95, 58, 0.85), rgba(26, 95, 58, 0.85)),
-    url("/assets/hero-food.jpg") center/cover;
-  color: white;
-  min-height: 60vh;
-  display: flex;
-  align-items: center;
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .nav {
+    width: 100%;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .navLink {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .hero {
+    padding: 4rem 1rem 3rem;
+    min-height: auto;
+  }
 }

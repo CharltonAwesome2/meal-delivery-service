@@ -21,7 +21,7 @@
 /* Card Grid Layout */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--spacing-lg);
   padding: var(--spacing-lg) 0;
 }
@@ -86,12 +86,12 @@
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 calc(var(--spacing-md) * -1);
+  margin: 0 calc(var(--spacing-sm) * -1);
 }
 
 .col {
   flex: 1;
-  padding: 0 var(--spacing-md);
+  padding: 0 var(--spacing-sm);
   min-width: 0;
 }
 
@@ -136,6 +136,25 @@
     flex: 0 0 100%;
     max-width: 100%;
   }
+
+  .card-grid {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    margin: 0;
+  }
+
+  .col {
+    padding: 0;
+  }
 }
 
 /* Skeleton Loading */
@@ -168,4 +187,10 @@
 .skeleton-image {
   height: 200px;
   width: 100%;
+}
+
+@media (max-width: 480px) {
+  .skeleton-image {
+    height: 160px;
+  }
 }

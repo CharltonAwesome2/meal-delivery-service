@@ -12,7 +12,7 @@ import "./index.css";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/meal-delivery-service">   {/* <-- ONLY CHANGE IS HERE */}
       <div className="app">
         <Header />
         <main>

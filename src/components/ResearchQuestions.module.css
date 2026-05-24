@@ -1,0 +1,180 @@
+/* src/components/ResearchQuestions.module.css */
+
+.researchSection {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.researchHeader {
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px dashed var(--border-color);
+}
+
+.researchHeader h3 {
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.3rem;
+}
+
+.researchHeader p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.question {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.question:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.questionLabel {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  display: block;
+  font-size: 0.95rem;
+}
+
+/* Radio Group - Stacked vertically */
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem 0;
+  transition: background 0.2s;
+}
+
+.radioLabel:hover {
+  color: var(--primary-color);
+}
+
+.radioLabel input {
+  cursor: pointer;
+  accent-color: var(--primary-color);
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+/* Checkbox Group - Uses CSS Grid for vertical fill */
+.checkboxGroup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
+}
+
+.checkboxLabel:hover {
+  background: rgba(47, 107, 59, 0.05);
+  border-color: var(--primary-color);
+  transform: translateX(2px);
+}
+
+.checkboxLabel input {
+  cursor: pointer;
+  accent-color: var(--primary-color);
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(47, 107, 59, 0.1);
+}
+
+.researchNote {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  text-align: center;
+  color: var(--text-light);
+  border-top: 1px solid var(--border-color);
+  font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .researchSection {
+    padding: var(--spacing-md);
+  }
+  
+  .checkboxGroup {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .checkboxLabel {
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .radioGroup {
+    gap: 0.5rem;
+  }
+  
+  .question {
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .researchSection {
+    padding: var(--spacing-sm);
+  }
+  
+  .researchHeader h3 {
+    font-size: 1.1rem;
+  }
+  
+  .questionLabel {
+    font-size: 0.9rem;
+  }
+  
+  .radioLabel,
+  .checkboxLabel {
+    font-size: 0.85rem;
+  }
+}

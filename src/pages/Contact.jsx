@@ -57,7 +57,7 @@ function Contact() {
           </div>
           <div className={styles.formGroup}>
             <label>Email</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            <input type="email" name="email" value={formData.email} onChange={handleChange} disabled />
           </div>
           <div className={styles.formGroup}>
             <label>Subject</label>

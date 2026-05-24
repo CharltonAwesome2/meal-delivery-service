@@ -4,26 +4,55 @@ import { DELIVERY_METHODS, DELIVERY_COST } from "@constants";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
 import styles from "./Order.module.css";
+import ResearchQuestions from "@components/ResearchQuestions";
 
 function Order() {
   const [cart, setCart] = useState([]);
   const [deliveryMethod, setDeliveryMethod] = useState(DELIVERY_METHODS.PICKUP);
   const [plan, setPlan] = useState("once");
+  const [researchAnswers, setResearchAnswers] = useState({});
+  const [status, setStatus] = useState("idle");
+  const [orderId, setOrderId] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     address: "",
-    notes: "", // Special instructions
+    notes: "",
   });
-  const [status, setStatus] = useState("idle");
-  const [orderId, setOrderId] = useState("");
 
   // Your fixed email address - all test orders go here
   const YOUR_EMAIL = "220483418@mycput.ac.za";
 
+  // Get today's date in YYYY-MM-DD format for default value
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  // Safe localStorage parser
+  const getSavedCart = () => {
+    const saved = localStorage.getItem("campusPlateCart");
+    if (!saved) return [];
+    try {
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      console.error("Failed to parse cart:", error);
+      localStorage.removeItem("campusPlateCart");
+      return [];
+    }
+  };
+
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("campusPlateCart") || "[]");
-    setCart(savedCart);
+    const savedCart = getSavedCart();
+    const cartWithDates = savedCart.map(item => ({
+      ...item,
+      id: item.id || Date.now() + Math.random(),
+      deliveryDate: getTodayDate()
+    }));
+    setCart(cartWithDates);
     generateOrderId();
   }, []);
 
@@ -36,11 +65,58 @@ function Order() {
   const removeFromCart = (id) => {
     const updated = cart.filter((item) => item.id !== id);
     setCart(updated);
-    localStorage.setItem("campusPlateCart", JSON.stringify(updated));
+    const toSave = updated.map(({ deliveryDate, ...item }) => item);
+    localStorage.setItem("campusPlateCart", JSON.stringify(toSave));
     toast.success("Item removed from cart");
   };
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+  const updateDeliveryDate = (itemId, newDate) => {
+    const updatedCart = cart.map(item =>
+      item.id === itemId ? { ...item, deliveryDate: newDate } : item
+    );
+    setCart(updatedCart);
+    const toSave = updatedCart.map(({ deliveryDate, ...item }) => item);
+    localStorage.setItem("campusPlateCart", JSON.stringify(toSave));
+  };
+
+  const handleResearchData = (data) => {
+    setResearchAnswers(data);
+  };
+
+  // Validation function
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = "Please enter your name";
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Please enter your phone number";
+    } else if (!/^[\d\s\+\-\(\)]{10,}$/.test(formData.phone)) {
+      newErrors.phone = "Please enter a valid phone number (at least 10 digits)";
+    }
+    
+    if (deliveryMethod === DELIVERY_METHODS.DELIVERY && !formData.address.trim()) {
+      newErrors.address = "Please enter your delivery address";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleOpenModal = (e) => {
+    e.preventDefault();
+    if (cart.length === 0) {
+      toast.error("Please add some meals to your cart first!");
+      return;
+    }
+    if (validateForm()) {
+      setShowConfirmModal(true);
+    }
+  };
+
+  const subtotal = cart.reduce((sum, item) => sum + (item.price || 0), 0);
   const deliveryFee = deliveryMethod === DELIVERY_METHODS.DELIVERY ? DELIVERY_COST : 0;
 
   let discount = 0;
@@ -50,18 +126,25 @@ function Order() {
   const discountAmount = subtotal * discount;
   const grandTotal = subtotal - discountAmount + deliveryFee;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (cart.length === 0) {
-      toast.error("Please add some meals to your cart first!");
-      return;
-    }
-
+  const handleSubmit = async () => {
+    setShowConfirmModal(false);
     setStatus("sending");
     const loadingToast = toast.loading("Processing test order...");
 
-    const itemsList = cart.map((item) => `• ${item.title} - R${item.price}`).join("\n");
+    const itemsList = cart.map((item) => 
+      `• ${item.title || "Unknown"} - R${item.price || 0} (Delivery: ${item.deliveryDate || getTodayDate()})`
+    ).join("\n");
+
+    const itemsByDate = cart.reduce((group, item) => {
+      const date = item.deliveryDate || getTodayDate();
+      if (!group[date]) group[date] = [];
+      group[date].push(item.title || "Unknown");
+      return group;
+    }, {});
+
+    const deliverySchedule = Object.entries(itemsByDate)
+      .map(([date, items]) => `${date}: ${items.join(", ")}`)
+      .join("\n");
 
     const estimatedTime = deliveryMethod === DELIVERY_METHODS.DELIVERY ? "1-2 hours" : "Ready in 30 minutes";
 
@@ -70,44 +153,41 @@ function Order() {
         "service_gktivua",
         "template_sm3hrqv",
         {
-          // Order Info
           order_id: orderId,
           order_date: new Date().toLocaleString("en-ZA"),
-
-          // Customer Details (from form)
           customer_name: formData.name,
-          customer_email: YOUR_EMAIL, // Hardcoded to your email
+          customer_email: YOUR_EMAIL,
           phone: formData.phone,
           email: YOUR_EMAIL,
-
-          // Delivery Details
           delivery_method: deliveryMethod === DELIVERY_METHODS.DELIVERY ? "Delivery" : "Pickup",
           address: formData.address || "Campus Central Pickup",
           estimated_time: estimatedTime,
-
-          // Meal Details
           meal_plan: plan === "once" ? "One-time Purchase" : plan.charAt(0).toUpperCase() + plan.slice(1),
           items: itemsList,
+          delivery_schedule: deliverySchedule,
           special_instructions: formData.notes || "None",
-
-          // Pricing
           subtotal: subtotal.toFixed(2),
           delivery_fee: deliveryFee.toFixed(2),
           discount: discountAmount.toFixed(2),
           total: grandTotal.toFixed(2),
-
-          // Test info
           payment_method: "Test Mode - No Payment Required",
           payment_status: "Test Order",
-          tester_name: formData.name, // So you know who tested
+          tester_name: formData.name,
+          would_use: researchAnswers.wouldUse || "Not answered",
+          satisfaction: researchAnswers.satisfaction || "Not answered",
+          order_frequency: researchAnswers.frequency || "Not answered",
+          weekly_budget: researchAnswers.budgetWeek || "Not answered",
+          desired_features: researchAnswers.features?.join(", ") || "None",
+          improvements: researchAnswers.improvements || "None",
+          referral_source: researchAnswers.referral || "Not answered",
+          price_fairness: researchAnswers.priceFairness || "Not answered",
         },
         "GU_PAZ4cqXWNphNep",
       );
 
       toast.dismiss(loadingToast);
-      toast.success(`🎉 Test order #${orderId} submitted! Check your email (${YOUR_EMAIL}) for details.`);
+      toast.success(`🎉 Test order #${orderId} submitted! Thank you very much!`);
 
-      // Clear cart and form
       localStorage.removeItem("campusPlateCart");
       setCart([]);
       setFormData({
@@ -116,6 +196,8 @@ function Order() {
         address: "",
         notes: "",
       });
+      setResearchAnswers({});
+      setErrors({});
       setStatus("success");
       generateOrderId();
     } catch (error) {
@@ -131,7 +213,6 @@ function Order() {
       <div className="container">
         <h2>Test Your Order</h2>
 
-        {/* Test mode banner */}
         <div
           style={{
             background: "#FFF3CD",
@@ -151,7 +232,6 @@ function Order() {
         )}
 
         <div className={styles.orderLayout}>
-          {/* Cart Section - Same as before */}
           <div className={styles.cartSection}>
             <h3>Your Cart ({cart.length} items)</h3>
 
@@ -159,10 +239,22 @@ function Order() {
               <>
                 {cart.map((item) => (
                   <div key={item.id} className={styles.cartItem}>
-                    <div>
-                      <strong>{item.title}</strong>
+                    <div className={styles.cartItemInfo}>
+                      <div>
+                        <strong>{item.title}</strong>
+                        <div className={styles.itemPrice}>R{item.price}</div>
+                      </div>
+                      <div className={styles.datePickerWrapper}>
+                        <label className={styles.dateLabel}>Delivery Date:</label>
+                        <input
+                          type="date"
+                          className={styles.dateInput}
+                          value={item.deliveryDate || getTodayDate()}
+                          min={getTodayDate()}
+                          onChange={(e) => updateDeliveryDate(item.id, e.target.value)}
+                        />
+                      </div>
                     </div>
-                    <div>R{item.price}</div>
                     <button onClick={() => removeFromCart(item.id)} className={styles.removeBtn}>
                       Remove
                     </button>
@@ -170,55 +262,44 @@ function Order() {
                 ))}
 
                 <div className={styles.summary}>
-                  <p>
-                    Subtotal: <strong>R{subtotal}</strong>
-                  </p>
-                  {discount > 0 && (
-                    <p>
-                      Discount ({plan}): <strong>-R{discountAmount.toFixed(2)}</strong>
-                    </p>
-                  )}
-                  {deliveryFee > 0 && (
-                    <p>
-                      Delivery: <strong>R{deliveryFee}</strong>
-                    </p>
-                  )}
+                  <p>Subtotal: <strong>R{subtotal}</strong></p>
+                  {discount > 0 && <p>Discount ({plan}): <strong>-R{discountAmount.toFixed(2)}</strong></p>}
+                  {deliveryFee > 0 && <p>Delivery: <strong>R{deliveryFee}</strong></p>}
                   <hr />
-                  <p>
-                    <strong>Total: R{grandTotal.toFixed(2)}</strong>
-                  </p>
+                  <p><strong>Total: R{grandTotal.toFixed(2)}</strong></p>
                   <small>🧪 Test transaction - No real payment</small>
                 </div>
               </>
             ) : (
-              <p>
-                Your cart is empty. <a href="/menu">Browse Menu</a>
-              </p>
+              <p>Your cart is empty. <a href="/menu">Browse Menu</a></p>
             )}
           </div>
 
-          {/* Order Form - NO EMAIL FIELD */}
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleOpenModal} className={styles.form}>
             <div className={styles.formGroup}>
               <label>Your Name *</label>
               <input
                 type="text"
-                required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onFocus={() => setErrors({ ...errors, name: "" })}
                 placeholder="Enter your name"
+                className={errors.name ? styles.inputError : ""}
               />
+              {errors.name && <span className={styles.errorText}>{errors.name}</span>}
             </div>
 
             <div className={styles.formGroup}>
               <label>Phone Number *</label>
               <input
                 type="tel"
-                required
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onFocus={() => setErrors({ ...errors, phone: "" })}
                 placeholder="Your contact number"
+                className={errors.phone ? styles.inputError : ""}
               />
+              {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
             </div>
 
             <div className={styles.formGroup}>
@@ -243,24 +324,27 @@ function Order() {
                 <label>Residence / Address *</label>
                 <input
                   type="text"
-                  required
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  onFocus={() => setErrors({ ...errors, address: "" })}
                   placeholder="e.g. Fuller Hall, Room 214, CPUT"
+                  className={errors.address ? styles.inputError : ""}
                 />
+                {errors.address && <span className={styles.errorText}>{errors.address}</span>}
               </div>
             )}
 
             <div className={styles.formGroup}>
-              <label>Special Instructions (Allergies, preferences, etc.)</label>
+              <label>Special Instructions</label>
               <textarea
                 rows="3"
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 placeholder="Any dietary restrictions or special requests?"
-                style={{ width: "100%", padding: "8px", borderRadius: "6px", border: "1px solid #ddd" }}
               />
             </div>
+
+            <ResearchQuestions onDataChange={handleResearchData} />
 
             <button
               type="submit"
@@ -268,7 +352,7 @@ function Order() {
               style={{ width: "100%", padding: "1rem", fontSize: "1.2rem" }}
               disabled={status === "sending" || cart.length === 0}
             >
-              {status === "sending" ? "Submitting Test Order..." : `Submit Test Order - R${grandTotal.toFixed(2)}`}
+              {status === "sending" ? "Submitting Test Order..." : `Review Order - R${grandTotal.toFixed(2)}`}
             </button>
 
             <p style={{ fontSize: "12px", color: "#666", textAlign: "center", marginTop: "10px" }}>
@@ -277,6 +361,38 @@ function Order() {
           </form>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowConfirmModal(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalIcon}>📋</div>
+            <h3>Confirm Your Test Order</h3>
+            
+            <div className={styles.modalSummary}>
+              <p><strong>Name:</strong> {formData.name}</p>
+              <p><strong>Phone:</strong> {formData.phone}</p>
+              <p><strong>Delivery:</strong> {deliveryMethod === DELIVERY_METHODS.DELIVERY ? "Delivery" : "Pickup"}</p>
+              {deliveryMethod === DELIVERY_METHODS.DELIVERY && <p><strong>Address:</strong> {formData.address}</p>}
+              <p><strong>Items:</strong> {cart.length} meals</p>
+              <p><strong>Total:</strong> R{grandTotal.toFixed(2)}</p>
+            </div>
+            
+            <p className={styles.modalNote}>
+              🧪 This is a test order. No payment will be processed.
+            </p>
+            
+            <div className={styles.modalButtons}>
+              <button onClick={() => setShowConfirmModal(false)} className={styles.cancelBtn}>
+                Cancel
+              </button>
+              <button onClick={handleSubmit} className={styles.confirmBtn} disabled={status === "sending"}>
+                {status === "sending" ? "Submitting..." : "Confirm & Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

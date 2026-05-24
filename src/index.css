@@ -6,9 +6,11 @@
   --primary-color: #2f6b3b;
   --primary-dark: #1f4d29;
   --primary-light: #4f8c5c;
+  --primary: #2f6b3b;
 
   --secondary-color: #ff9f43;
   --secondary-dark: #f08c2e;
+  --accent: #ff9f43;
 
   --background-color: #f8f5ef;
   --surface-color: #ffffff;
@@ -19,6 +21,7 @@
   --text-light: #829ab1;
 
   --border-color: #d9e2ec;
+  --border: #d9e2ec;
 
   --success-color: #2dce89;
   --warning-color: #ffb020;
@@ -40,13 +43,13 @@
   /* Typography */
   --font-family: "Inter", "Segoe UI", sans-serif;
 
-  --font-size-sm: 0.875rem;
+  --font-size-sm: clamp(0.8125rem, 0.4vw + 0.75rem, 0.875rem);
   --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.4rem;
-  --font-size-2xl: 2rem;
-  --font-size-3xl: 2.8rem;
-  --font-size-4xl: 4rem;
+  --font-size-lg: clamp(1rem, 0.5vw + 0.95rem, 1.125rem);
+  --font-size-xl: clamp(1.25rem, 1vw + 1rem, 1.4rem);
+  --font-size-2xl: clamp(1.5rem, 2vw + 1rem, 2rem);
+  --font-size-3xl: clamp(2rem, 3vw + 1rem, 2.8rem);
+  --font-size-4xl: clamp(2.5rem, 5vw + 1rem, 4rem);
 
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -65,6 +68,13 @@
   box-sizing: border-box;
 }
 
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
 /* Base Styles */
 body {
   margin: 0;
@@ -74,6 +84,8 @@ body {
   background-color: var(--background-color);
   color: var(--text-primary);
   line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 #root {
@@ -256,6 +268,18 @@ label {
 .py-4 {
   padding-top: var(--spacing-xl);
   padding-bottom: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-xl: 1.5rem;
+    --spacing-2xl: 2rem;
+    --spacing-3xl: 3rem;
+  }
+
+  .container {
+    padding: 0 var(--spacing-md);
+  }
 }
 
 /* index.css */

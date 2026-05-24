@@ -37,3 +37,25 @@
   margin-bottom: var(--spacing-sm);
   line-height: 1.6;
 }
+
+@media (max-width: 768px) {
+  .aboutContainer {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .aboutContainer h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .aboutContainer h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .aboutContainer p {
+    font-size: var(--font-size-base);
+  }
+
+  .aboutContainer ul {
+    padding-left: 0;
+  }
+}

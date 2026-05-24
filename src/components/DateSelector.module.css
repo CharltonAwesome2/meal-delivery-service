@@ -1,0 +1,93 @@
+.dateSection {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f0f7f0;
+  border-radius: 12px;
+}
+
+.dateSection h4 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.dateOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.subLabel {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0.75rem 0 0.5rem;
+  color: var(--text-secondary);
+}
+
+.dateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.dateCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
+}
+
+.dateCheckbox:hover {
+  border-color: var(--primary-color);
+  background: rgba(47, 107, 59, 0.05);
+}
+
+.rangeInputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rangeGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rangeGroup label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.rangeGroup input {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .dateOptions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .dateGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

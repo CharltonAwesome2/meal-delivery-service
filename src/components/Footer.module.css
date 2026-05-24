@@ -13,3 +13,10 @@
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
+
+@media (max-width: 768px) {
+  .footer {
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin-top: var(--spacing-2xl);
+  }
+}

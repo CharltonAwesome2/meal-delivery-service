@@ -3,6 +3,16 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: var(--surface-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
 }
 
 .imageContainer {
@@ -15,6 +25,7 @@
   object-fit: cover;
 }
 
+/* Regular badge */
 .badge {
   position: absolute;
   top: 12px;
@@ -23,33 +34,75 @@
   color: white;
   padding: 4px 12px;
   border-radius: 9999px;
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
   font-weight: 600;
+  z-index: 1;
+}
+
+/* Special badge for daily specials */
+.specialBadge {
+  background: linear-gradient(135deg, var(--accent), var(--secondary-dark));
+  color: white;
+  font-weight: bold;
+  animation: pulse 1.5s ease-in-out infinite;
+  font-size: calc(var(--font-size-sm) + 1px);
+  padding: 6px 14px;
 }
 
 .cardContent {
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .type {
-  font-size: 0.95rem;
-  color: var(--primary);
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-sm);
   font-weight: 500;
+  text-transform: capitalize;
 }
 
 .cardContent h3 {
-  margin-bottom: 0.75rem;
-  font-size: 1.4rem;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-xl);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .description {
   color: var(--text-secondary);
   flex: 1;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+  font-size: var(--font-size-base);
+}
+
+/* Nutrition tip styling */
+.nutritionTip {
+  background-color: rgba(47, 107, 59, 0.08);
+  border-left: 4px solid var(--primary-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin: var(--spacing-sm) 0 var(--spacing-md) 0;
+  border-radius: 8px;
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nutritionIcon {
+  font-size: 1.1rem;
+  min-width: 24px;
+}
+
+.nutritionText {
+  color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .priceRow {
@@ -57,12 +110,30 @@
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
+  gap: var(--spacing-md);
+}
+
+.priceContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .price {
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: var(--primary);
+  color: var(--primary-color);
+}
+
+.specialPrice {
+  font-size: var(--font-size-sm);
+  color: var(--accent);
+  font-weight: bold;
+  background: rgba(255, 159, 67, 0.1);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
 }
 
 .addBtn {
@@ -73,8 +144,166 @@
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  font-size: var(--font-size-sm);
 }
 
 .addBtn:hover {
-  background: #e55a00;
+  background: var(--secondary-dark);
+  transform: translateY(-2px);
+}
+
+.addBtn:active {
+  transform: scale(0.98);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cardImage {
+    height: 180px;
+  }
+
+  .cardContent {
+    padding: var(--spacing-md);
+  }
+
+  .cardContent h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .price {
+    font-size: var(--font-size-xl);
+  }
+
+  .priceRow {
+    gap: var(--spacing-sm);
+  }
+
+  .nutritionTip {
+    font-size: var(--font-size-sm);
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardImage {
+    height: 160px;
+  }
+
+  .cardContent {
+    padding: var(--spacing-md);
+  }
+
+  .priceRow {
+    flex-direction: column;
+  }
+
+  .addBtn {
+    width: 100%;
+  }
+
+  .priceContainer {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .specialBadge {
+    font-size: calc(var(--font-size-sm) - 2px);
+    padding: 3px 10px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .badge {
+    font-size: calc(var(--font-size-sm) - 2px);
+    padding: 3px 10px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .nutritionTip {
+    margin: 6px 0 10px 0;
+  }
+}
+
+/* Add to MealCard.module.css */
+
+.fallbackImage {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fallbackImage::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: shimmer 3s infinite;
+}
+
+.fallbackText {
+  color: white;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  background: rgba(0,0,0,0.2);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translate(-30%, -30%) rotate(0deg);
+  }
+  100% {
+    transform: translate(30%, 30%) rotate(360deg);
+  }
+}
+
+/* Adjust responsive sizes */
+@media (max-width: 768px) {
+  .fallbackImage {
+    height: 180px;
+  }
+  
+  .fallbackImage svg {
+    font-size: 3rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .fallbackImage {
+    height: 160px;
+  }
+  
+  .fallbackImage svg {
+    font-size: 2.5rem !important;
+  }
+  
+  .fallbackText {
+    font-size: calc(var(--font-size-sm) - 2px);
+  }
 }
