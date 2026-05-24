@@ -77,7 +77,7 @@ export const MEALS = [
     title: "Lean Beef Mince & Veggies",
     description: "Lean beef mince sautéed with mixed veg & mashed potato",
     price: 50,
-    image: assetUrl("assets/beef-mince.jpg"),  // ✅ FIXED: added assets/
+    image: assetUrl("assets/beef-mince.jpg"), 
     type: "beef",
   },
   {
@@ -85,7 +85,7 @@ export const MEALS = [
     title: "Chicken Souvlaki Stick & Greek Salad",
     description: "Two skewers of lemon-oregano chicken with feta & olive salad",
     price: 47,
-    image: assetUrl("assets/souvlaki.jpg"),  // ✅ FIXED: added assets/
+    image: assetUrl("assets/souvlaki.jpg"), 
     type: "chicken",
   },
 
@@ -95,7 +95,7 @@ export const MEALS = [
     title: "Grilled Hake & Veggie Stack",
     description: "Hake fillet with zucchini, bell peppers & sweet potato mash",
     price: 58,
-    image: assetUrl("assets/hake-stack.jpg"),  // ✅ FIXED: added assets/
+    image: assetUrl("assets/hake-stack.jpg"), 
     type: "fish",
     badge: "Omega-3 Rich",
   },
@@ -104,7 +104,7 @@ export const MEALS = [
     title: "Turkey & Avocado Sandwich",
     description: "Lean turkey, avocado, lettuce, tomato on sourdough with side salad",
     price: 55,
-    image: assetUrl("assets/turkey-sandwich.jpg"),  // ✅ FIXED: added assets/
+    image: assetUrl("assets/turkey-sandwich.jpg"), 
     type: "chicken",
   },
   {
@@ -112,7 +112,7 @@ export const MEALS = [
     title: "Lamb & Veggie Sosatie",
     description: "Lean lamb pieces with peppers, onion & brown rice",
     price: 60,
-    image: assetUrl("assets/lamb-sosatie.jpg"),  // ✅ FIXED: added assets/
+    image: assetUrl("assets/lamb-sosatie.jpg"), 
     type: "lamb",
   },
   {
@@ -120,7 +120,7 @@ export const MEALS = [
     title: "Three Bean Chilli",
     description: "Kidney beans, black beans, chickpeas in spicy tomato sauce with rice",
     price: 44,
-    image: assetUrl("assets/bean-chilli.jpg"),  // ✅ FIXED: added assets/
+    image: assetUrl("assets/bean-chilli.jpg"), 
     type: "vegetarian",
     badge: "Vegan",
   },
@@ -129,12 +129,48 @@ export const MEALS = [
     title: "Chicken & Broccoli Stir-fry",
     description: "Ginger-soy chicken with broccoli, carrots & egg noodles",
     price: 49,
-    image: assetUrl("assets/chicken-stirfry.jpg"),  // ✅ FIXED: added assets/
+    image: assetUrl("assets/chicken-stirfry.jpg"), 
     type: "chicken",
+  },
+  // Add these to your MEALS array
+
+  // === BURGERS ===
+  {
+    id: 16,
+    title: "Classic Beef Burger",
+    description: "100% beef patty, fresh lettuce, tomato, onion & special sauce in a toasted bun",
+    price: 55,
+    image: assetUrl("assets/beef-burger.jpg"),
+    type: "beef",
+  },
+  {
+    id: 17,
+    title: "Double Beef Burger",
+    description: "Two juicy beef patties, double cheese, lettuce, pickles & secret sauce",
+    price: 75,
+    image: assetUrl("assets/double-beef-burger.jpg"),
+    type: "beef",
+    badge: "Double Meat",
+  },
+  {
+    id: 18,
+    title: "Grilled Chicken Burger",
+    description: "Tender grilled chicken breast, avocado, lettuce, tomato & mayo",
+    price: 52,
+    image: assetUrl("assets/chicken-burger.jpg"),
+    type: "chicken",
+  },
+  {
+    id: 19,
+    title: "Veggie Crunch Burger",
+    description: "House-made veggie patty (chickpea & sweet potato), lettuce, tomato & tangy sauce",
+    price: 48,
+    image: assetUrl("assets/veggie-burger.jpg"),
+    type: "vegetarian",
+    badge: "Plant-Based",
   },
 ];
 
-// Rest of your constants remain the same...
 export const DAILY_SPECIALS = [
   {
     day: "Monday",

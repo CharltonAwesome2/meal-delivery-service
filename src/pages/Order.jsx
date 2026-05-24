@@ -251,7 +251,8 @@ function Order() {
           }}
         >
           <p style={{ margin: 0, color: "#856404" }}>
-            🧪 <strong>TEST MODE</strong> - Orders will be sent to developer for testing. No payment required.
+            🧪 <strong>TEST MODE</strong> - Orders will be sent to developer for testing. No payment required.<br/>
+            Questionnaire at bottom of page
           </p>
         </div>
 

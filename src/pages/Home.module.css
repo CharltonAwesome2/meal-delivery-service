@@ -61,3 +61,8 @@
     gap: var(--spacing-sm);
   }
 }
+
+
+.tagline2{
+  font-weight: bold;
+}

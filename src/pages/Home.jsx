@@ -13,15 +13,17 @@ function Home() {
             Delivered to Your Res
           </h1>
           <p className={styles.tagline}>Fresh, student-friendly meals under R60. Perfect for busy days at CPUT.</p>
-          <p className={styles.tagline}>To fill in the questionnaire, add at least one meal to your cart and checkout.</p>
+          <p className={`${styles.tagline2}`}>
+            <bold>To fill in the questionnaire, add at least one meal to your cart and checkout.</bold>
+          </p>
 
           <div className={styles.actions}>
             <Link to="/menu" className="btn btn-primary">
-              Browse Menu
+              Click Here to Browse Menu
             </Link>
-            <Link to="/order" className="btn btn-accent">
+            {/* <Link to="/order" className="btn btn-accent">
               Order Now
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>

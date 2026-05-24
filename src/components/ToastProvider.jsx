@@ -13,7 +13,7 @@ function ToastProvider() {
         right: 20,
       }}
       toastOptions={{
-        duration: 3000,
+        duration: 2000,
 
         style: {
           background: "#ffffff",

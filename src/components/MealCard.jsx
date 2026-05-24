@@ -22,8 +22,8 @@ function MealCard({ title, description, price, image, type, badge }) {
   // Icon components for fallback
   const getFallbackIcon = () => {
     const iconStyle = { fontSize: "4rem", color: "var(--primary-light)" };
-    
-    switch(type) {
+
+    switch (type) {
       case "vegetarian":
         return <FaLeaf style={iconStyle} />;
       case "chicken":
@@ -43,8 +43,8 @@ function MealCard({ title, description, price, image, type, badge }) {
 
   // Get today's special based on actual day of week
   const getTodaysSpecial = () => {
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-    return DAILY_SPECIALS?.find(special => special.day === today);
+    const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+    return DAILY_SPECIALS?.find((special) => special.day === today);
   };
 
   const todaysSpecial = getTodaysSpecial();
@@ -74,7 +74,13 @@ function MealCard({ title, description, price, image, type, badge }) {
 
     localStorage.setItem("campusPlateCart", JSON.stringify(newCart));
 
-    toast.success(`${title} added to cart! 🛒`);
+    toast.success(
+      <>
+        {title} added to cart! 🛒
+        <br />
+        Click on cart icon to checkout
+      </>,
+    );
   };
 
   return (
@@ -95,16 +101,10 @@ function MealCard({ title, description, price, image, type, badge }) {
         )}
 
         {/* Show special badge if it's today's special */}
-        {isTodaysSpecial && (
-          <span className={`${styles.badge} ${styles.specialBadge}`}>
-            🌟 Today's Special 🌟
-          </span>
-        )}
+        {isTodaysSpecial && <span className={`${styles.badge} ${styles.specialBadge}`}>🌟 Today's Special 🌟</span>}
 
         {/* Regular badge (if exists and not today's special) */}
-        {badge && !isTodaysSpecial && (
-          <span className={styles.badge}>{badge}</span>
-        )}
+        {badge && !isTodaysSpecial && <span className={styles.badge}>{badge}</span>}
       </div>
 
       <div className={styles.cardContent}>
@@ -123,11 +123,17 @@ function MealCard({ title, description, price, image, type, badge }) {
         {nutritionTip && (
           <div className={styles.nutritionTip}>
             <span className={styles.nutritionIcon}>
-              {nutritionTip.includes("💪") ? "💪" : 
-               nutritionTip.includes("🥗") ? "🥗" :
-               nutritionTip.includes("🌱") ? "🌱" :
-               nutritionTip.includes("🐟") ? "🐟" :
-               nutritionTip.includes("💰") ? "💰" : "ℹ️"}
+              {nutritionTip.includes("💪")
+                ? "💪"
+                : nutritionTip.includes("🥗")
+                  ? "🥗"
+                  : nutritionTip.includes("🌱")
+                    ? "🌱"
+                    : nutritionTip.includes("🐟")
+                      ? "🐟"
+                      : nutritionTip.includes("💰")
+                        ? "💰"
+                        : "ℹ️"}
             </span>
             <span className={styles.nutritionText}>{nutritionTip}</span>
           </div>
@@ -136,9 +142,7 @@ function MealCard({ title, description, price, image, type, badge }) {
         <div className={styles.priceRow}>
           <div className={styles.priceContainer}>
             <span className={styles.price}>R{price}</span>
-            {isTodaysSpecial && (
-              <span className={styles.specialPrice}>🔥 Special Price!</span>
-            )}
+            {isTodaysSpecial && <span className={styles.specialPrice}>🔥 Special Price!</span>}
           </div>
 
           <button className={styles.addBtn} onClick={addToCart}>

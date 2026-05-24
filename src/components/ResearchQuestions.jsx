@@ -304,13 +304,13 @@ function ResearchQuestions({ onDataChange, validationAttempted = false, requestS
               </span>
 
               <span className={styles.summaryMeta}>
-                <span
+                {/* <span
                   className={`${styles.statusPill} ${
                     answered ? styles.statusAnswered : question.required ? styles.statusPending : styles.statusOptional
                   }`}
                 >
                   {answered ? "Completed" : question.required ? "Required" : "Optional"}
-                </span>
+                </span> */}
                 <span className={styles.chevron} aria-hidden="true">▾</span>
               </span>
             </summary>
