@@ -22,7 +22,7 @@ export const RESEARCH_QUESTIONS = [
   {
     id: "frequency",
     number: 3,
-    title: "How often would you likely order from CampusPlate?",
+    title: "How often would you order from CampusPlate?",
     required: true,
     type: "radio",
     options: ["Daily", "3-4 times per week", "1-2 times per week", "Once a week", "Occasionally", "Rarely"],
@@ -137,7 +137,7 @@ function ResearchQuestions({ onDataChange, validationAttempted = false, requestS
     {
       id: "frequency",
       number: 3,
-      title: "How often would you likely order from CampusPlate?",
+      title: "How often would you order from CampusPlate?",
       required: true,
       type: "radio",
       options: ["Daily", "3-4 times per week", "1-2 times per week", "Once a week", "Occasionally", "Rarely"],

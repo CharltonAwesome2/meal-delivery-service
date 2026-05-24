@@ -77,7 +77,7 @@ export const MEALS = [
     title: "Lean Beef Mince & Veggies",
     description: "Lean beef mince sautéed with mixed veg & mashed potato",
     price: 50,
-    image: assetUrl("beef-mince.jpg"),
+    image: assetUrl("assets/beef-mince.jpg"),  // ✅ FIXED: added assets/
     type: "beef",
   },
   {
@@ -85,7 +85,7 @@ export const MEALS = [
     title: "Chicken Souvlaki Stick & Greek Salad",
     description: "Two skewers of lemon-oregano chicken with feta & olive salad",
     price: 47,
-    image: assetUrl("souvlaki.jpg"),
+    image: assetUrl("assets/souvlaki.jpg"),  // ✅ FIXED: added assets/
     type: "chicken",
   },
 
@@ -95,7 +95,7 @@ export const MEALS = [
     title: "Grilled Hake & Veggie Stack",
     description: "Hake fillet with zucchini, bell peppers & sweet potato mash",
     price: 58,
-    image: assetUrl("hake-stack.jpg"),
+    image: assetUrl("assets/hake-stack.jpg"),  // ✅ FIXED: added assets/
     type: "fish",
     badge: "Omega-3 Rich",
   },
@@ -104,7 +104,7 @@ export const MEALS = [
     title: "Turkey & Avocado Sandwich",
     description: "Lean turkey, avocado, lettuce, tomato on sourdough with side salad",
     price: 55,
-    image: assetUrl("turkey-sandwich.jpg"),
+    image: assetUrl("assets/turkey-sandwich.jpg"),  // ✅ FIXED: added assets/
     type: "chicken",
   },
   {
@@ -112,7 +112,7 @@ export const MEALS = [
     title: "Lamb & Veggie Sosatie",
     description: "Lean lamb pieces with peppers, onion & brown rice",
     price: 60,
-    image: assetUrl("lamb-sosatie.jpg"),
+    image: assetUrl("assets/lamb-sosatie.jpg"),  // ✅ FIXED: added assets/
     type: "lamb",
   },
   {
@@ -120,7 +120,7 @@ export const MEALS = [
     title: "Three Bean Chilli",
     description: "Kidney beans, black beans, chickpeas in spicy tomato sauce with rice",
     price: 44,
-    image: assetUrl("bean-chilli.jpg"),
+    image: assetUrl("assets/bean-chilli.jpg"),  // ✅ FIXED: added assets/
     type: "vegetarian",
     badge: "Vegan",
   },
@@ -129,11 +129,12 @@ export const MEALS = [
     title: "Chicken & Broccoli Stir-fry",
     description: "Ginger-soy chicken with broccoli, carrots & egg noodles",
     price: 49,
-    image: assetUrl("chicken-stirfry.jpg"),
+    image: assetUrl("assets/chicken-stirfry.jpg"),  // ✅ FIXED: added assets/
     type: "chicken",
   },
 ];
 
+// Rest of your constants remain the same...
 export const DAILY_SPECIALS = [
   {
     day: "Monday",
@@ -181,7 +182,6 @@ export const DAILY_SPECIALS = [
   },
 ];
 
-// Add this to your constants/index.js file
 export const NUTRITION_TIPS = {
   "High Protein": "💪 25g+ protein - Great for post-workout",
   Healthy: "🥗 Under 500 calories - Dietitian approved",
